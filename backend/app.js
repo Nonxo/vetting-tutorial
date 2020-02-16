@@ -1,11 +1,24 @@
+const path = require('path')
 const express = require('express');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+
+const usersRoute = require('./routes/user')
+
+const postsRoute = require('./routes/post');
 
 const app = express();
 
-
+mongoose.connect('mongodb+srv://nonxoUser:6LHdvbvj4xQAjcrS@cluster0-yuuim.azure.mongodb.net/node-angular?retryWrites=true&w=majority',{ useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => {
+    console.log('Connected to MongoDb')
+  })
+  .catch(() => {
+    console.log('Connection failed!')
+  });
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use('/images', express.static(path.join('backend/images')))
 
 
 app.use((req, res, next) => {
@@ -18,35 +31,12 @@ app.use((req, res, next) => {
   );
   res.setHeader(
     'Access-Control-Allow-Methods',
-    'GET, POST, PATCH, DELETE, OPTIONS')
+    'GET, POST, PUT, PATCH, DELETE, OPTIONS')
   next();
 });
 
-app.post('/api/posts', (req, res, next) => {
-  const posts = req.body
-  console.log(posts);
-  res.status(201).json({
-    message: 'Post created Successfully'
-  });
-});
+app.use('/api/user', usersRoute);
 
-app.get('/api/posts', (req, res, next) => {
-  const posts = [
-    {
-      id: 'f4657hj839',
-      title: 'First server-side post',
-      content: 'This is coming from the server'
-    },
-    {
-      id: 'f497ba7839',
-      title: 'Second server-side post',
-      content: 'This is coming from the server'
-    },
-  ];
-  res.status(200).json({
-    message: 'Post fetched successfully',
-    posts: posts
-  })
-});
+app.use('/api/posts', postsRoute);
 
 module.exports = app
