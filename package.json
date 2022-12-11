@@ -24,7 +24,7 @@
     "bcrypt": "^3.0.8",
     "body-parser": "^1.19.0",
     "debug": "latest",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "hammerjs": "^2.0.8",
     "mongoose": "^5.8.11",
     "mongoose-unique-validator": "^2.0.3",
